@@ -1,0 +1,45 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular
+/coverage
+/typings
+__screenshots__/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local Claude Code settings
+.claude/
+
+# Design reference snippets (ported into src/app/layout and shared/components)
+/background.txt
+/buttons.txt
+/dock.txt

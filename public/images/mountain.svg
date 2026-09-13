@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#030406"/>
+      <stop offset=".55" stop-color="#080a10"/>
+      <stop offset="1" stop-color="#121622"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.62" cy="0.34" r="0.42">
+      <stop offset="0" stop-color="#ff7a1a" stop-opacity=".22"/>
+      <stop offset=".5" stop-color="#ff7a1a" stop-opacity=".06"/>
+      <stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lit" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd08a"/>
+      <stop offset=".35" stop-color="#ff8a2a"/>
+      <stop offset=".75" stop-color="#b8420a"/>
+      <stop offset="1" stop-color="#3a1606"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3b"/>
+      <stop offset=".6" stop-color="#151922"/>
+      <stop offset="1" stop-color="#0b0d13"/>
+    </linearGradient>
+    <linearGradient id="snow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dfe6ef"/>
+      <stop offset="1" stop-color="#7d8898"/>
+    </linearGradient>
+    <linearGradient id="ridgeFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b202b"/>
+      <stop offset="1" stop-color="#0c0f15"/>
+    </linearGradient>
+    <linearGradient id="ridgeNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1016"/>
+      <stop offset="1" stop-color="#060709"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="2.2"/></filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#halo)"/>
+
+  <!-- stars -->
+  <g fill="#fff">
+    <circle cx="84" cy="62" r="1.2" opacity=".8"/><circle cx="190" cy="140" r=".9" opacity=".5"/>
+    <circle cx="260" cy="48" r="1.4" opacity=".9"/><circle cx="342" cy="210" r="1" opacity=".45"/>
+    <circle cx="410" cy="96" r=".8" opacity=".6"/><circle cx="498" cy="30" r="1.1" opacity=".7"/>
+    <circle cx="560" cy="170" r="1.3" opacity=".55"/><circle cx="640" cy="72" r=".9" opacity=".8"/>
+    <circle cx="720" cy="130" r="1.5" opacity=".5"/><circle cx="802" cy="40" r="1" opacity=".85"/>
+    <circle cx="880" cy="200" r=".8" opacity=".4"/><circle cx="946" cy="86" r="1.2" opacity=".7"/>
+    <circle cx="1030" cy="26" r="1.6" opacity=".9"/><circle cx="1110" cy="150" r="1" opacity=".5"/>
+    <circle cx="1190" cy="60" r=".9" opacity=".75"/><circle cx="1262" cy="190" r="1.3" opacity=".45"/>
+    <circle cx="1340" cy="104" r="1" opacity=".8"/><circle cx="1418" cy="34" r="1.4" opacity=".65"/>
+    <circle cx="1500" cy="160" r=".9" opacity=".55"/><circle cx="1560" cy="70" r="1.2" opacity=".85"/>
+    <circle cx="130" cy="290" r=".8" opacity=".35"/><circle cx="460" cy="300" r="1" opacity=".3"/>
+    <circle cx="1220" cy="300" r=".9" opacity=".35"/><circle cx="1480" cy="280" r="1.1" opacity=".3"/>
+    <circle cx="36" cy="200" r="1" opacity=".5"/><circle cx="700" cy="250" r=".7" opacity=".35"/>
+    <circle cx="1400" cy="230" r=".8" opacity=".4"/><circle cx="980" cy="260" r=".8" opacity=".3"/>
+  </g>
+  <g fill="#ffe2b8" filter="url(#glow)">
+    <circle cx="300" cy="120" r="2.2"/><circle cx="1180" cy="110" r="2"/><circle cx="1470" cy="90" r="1.8"/>
+  </g>
+
+  <!-- far range -->
+  <path d="M0 720 L120 640 L210 670 L330 560 L430 610 L520 540 L600 600 L700 520 L760 560 L820 520 L900 600 L1000 560 L1100 620 L1200 540 L1300 600 L1420 520 L1520 590 L1600 560 L1600 1000 L0 1000Z" fill="url(#ridgeFar)"/>
+  <path d="M330 560 L360 585 L345 590 L372 610 L430 610 L395 582Z M1420 520 L1448 548 L1432 552 L1462 574 L1520 590 L1480 556Z M700 520 L722 546 L708 550 L736 566 L760 560 L735 540Z" fill="#8995a6" opacity=".35"/>
+
+  <!-- warm light bloom behind the main peak -->
+  <ellipse cx="990" cy="360" rx="260" ry="200" fill="#ff7a1a" opacity=".16" filter="url(#blur)"/>
+
+  <!-- main peak: shaded west face -->
+  <path d="M520 1000 L700 760 L780 700 L850 560 L920 430 L990 250 L1010 262 L1040 330 L990 420 L960 520 L900 640 L860 760 L820 1000Z" fill="url(#shade)"/>
+  <!-- main peak: sunlit east face -->
+  <path d="M990 250 L1030 290 L1080 360 L1120 420 L1190 520 L1240 580 L1330 690 L1420 800 L1520 1000 L820 1000 L860 760 L900 640 L960 520 L990 420 L1040 330Z" fill="url(#lit)"/>
+  <!-- snow on the lit face -->
+  <path d="M990 250 L1030 290 L1066 346 L1044 352 L1080 400 L1050 398 L1010 330 L1000 380 L975 410 L1000 330Z" fill="#fff3e0" opacity=".85"/>
+  <!-- snow on shaded face -->
+  <path d="M990 250 L975 300 L948 360 L930 420 L956 392 L952 440 L985 380 L1000 320 L1010 262Z" fill="url(#snow)" opacity=".75"/>
+  <!-- rock seams -->
+  <g stroke="#1a0a03" stroke-opacity=".55" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M1040 420 L1100 520 L1120 600"/>
+    <path d="M1000 500 L1060 610 L1070 720"/>
+    <path d="M1160 560 L1230 660 L1250 760"/>
+    <path d="M950 620 L990 720 L980 840"/>
+  </g>
+  <!-- summit spark -->
+  <circle cx="990" cy="250" r="6" fill="#ffd08a" filter="url(#glow)"/>
+  <circle cx="990" cy="250" r="2.2" fill="#fff"/>
+
+  <!-- side peak (left) -->
+  <path d="M120 1000 L300 760 L380 700 L470 610 L520 660 L600 740 L700 860 L760 1000Z" fill="#10131a"/>
+  <path d="M470 610 L520 660 L500 664 L535 700 L505 698 L470 660 L440 690 L452 650Z" fill="url(#snow)" opacity=".55"/>
+
+  <!-- near ridge -->
+  <path d="M0 1000 L0 840 L140 780 L260 820 L400 760 L540 830 L660 800 L800 880 L940 840 L1080 900 L1240 850 L1380 900 L1500 860 L1600 880 L1600 1000Z" fill="url(#ridgeNear)"/>
+  <path d="M0 1000 L0 910 L200 880 L420 930 L640 900 L880 950 L1120 920 L1360 960 L1600 930 L1600 1000Z" fill="#060709"/>
+</svg>

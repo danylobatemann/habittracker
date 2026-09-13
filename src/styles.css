@@ -1,0 +1,600 @@
+/* ==========================================================================
+   SyncHabit — global styles
+   --------------------------------------------------------------------------
+   Palette is taken from the "night summit" hero: near-black sky, cold snow
+   greys and a single neon ember accent (the sunlit peak). Components only use
+   tokens (var(--…)); raw colors live here.
+   ========================================================================== */
+
+:root {
+  /* --- Palette (dark, default) ------------------------------------------ */
+  --bg: #060709;
+  --bg-elev: #0b0c0f;
+  --surface: rgba(17, 18, 22, 0.72);
+  --surface-solid: #111216;
+  --surface-2: #17181d;
+  --surface-3: #202229;
+
+  --ember: #ff7a1a;            /* neon accent — active, completed */
+  --ember-strong: #e25a00;     /* filled buttons, white text passes AA */
+  --ember-soft: #ffb27a;       /* accent text on dark */
+  --gold: #ffc766;             /* highlights, streak flame core */
+  --ice: #b8c4d4;              /* secondary series: other members, snow */
+  --danger: #ff5364;
+  --success: #ffa94d;
+
+  --heading: #f5f2ed;
+  --text: #e4e1dc;
+  --text-soft: #a8a59f;
+  --text-muted: #77746f;
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* rgb triplets for rgba() glows and canvas drawing */
+  --ember-rgb: 255, 122, 26;
+  --gold-rgb: 255, 199, 102;
+  --ink-rgb: 255, 255, 255;      /* grid lines / dots */
+  --grid-bg: #060709;
+
+  --glow-sm: 0 0 12px rgba(var(--ember-rgb), 0.45);
+  --glow-md: 0 0 22px rgba(var(--ember-rgb), 0.45), 0 0 60px -10px rgba(var(--ember-rgb), 0.35);
+  --shadow-deep: 0 30px 60px -28px rgba(0, 0, 0, 0.85), 0 12px 24px -14px rgba(0, 0, 0, 0.6);
+
+  /* --- Typography ------------------------------------------------------- */
+  --font-display: 'Unbounded', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --fs-display: clamp(2.4rem, 1.4rem + 5vw, 5.4rem);
+  --fs-h1: clamp(1.75rem, 1.35rem + 2vw, 2.75rem);
+  --fs-h2: clamp(1.35rem, 1.15rem + 1vw, 1.9rem);
+  --fs-h3: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+  --fs-lead: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+  --fs-body: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.78rem;
+
+  /* --- Shape & motion ----------------------------------------------------- */
+  --radius-pill: 999px;
+  --radius-card: 22px;
+  --radius-panel: 28px;
+  --radius-input: 14px;
+  --radius-sm: 8px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* --- Layout ------------------------------------------------------------- */
+  --container: 1200px;
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --dock-h: 64px;
+  --page-top: calc(var(--dock-h) + clamp(1.75rem, 1rem + 3vw, 3.5rem));
+
+  /* --- Layers ------------------------------------------------------------- */
+  --z-grid: 0;
+  --z-cursor: 2;
+  --z-content: 3;
+  --z-dock: 50;
+  --z-dialog: 70;
+  --z-toast: 80;
+  --z-particles: 100;
+
+  color-scheme: dark;
+}
+
+/* --- Light theme: "snow field" ------------------------------------------- */
+:root[data-theme='light'] {
+  --bg: #f3f1ed;
+  --bg-elev: #ebe8e3;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-solid: #ffffff;
+  --surface-2: #f0ede8;
+  --surface-3: #e4e0d9;
+
+  --ember: #f06a00;
+  --ember-strong: #c94f00;
+  --ember-soft: #b24600;
+  --gold: #c98a00;
+  --ice: #51637a;
+  --danger: #d42a3c;
+  --success: #c96a00;
+
+  --heading: #141312;
+  --text: #24221f;
+  --text-soft: #5b5751;
+  --text-muted: #86817a;
+
+  --line: rgba(20, 18, 15, 0.08);
+  --line-strong: rgba(20, 18, 15, 0.16);
+
+  --ember-rgb: 240, 106, 0;
+  --ink-rgb: 20, 18, 15;
+  --grid-bg: #f3f1ed;
+
+  --glow-sm: 0 0 10px rgba(var(--ember-rgb), 0.3);
+  --glow-md: 0 0 18px rgba(var(--ember-rgb), 0.28), 0 18px 40px -18px rgba(var(--ember-rgb), 0.35);
+  --shadow-deep: 0 24px 50px -30px rgba(40, 30, 20, 0.35), 0 10px 20px -16px rgba(40, 30, 20, 0.2);
+
+  color-scheme: light;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--bg);
+  scroll-padding-top: calc(var(--dock-h) + 1.5rem);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); line-height: 1.3; letter-spacing: -0.01em; }
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--ember-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover { color: var(--heading); }
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--ember-strong);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Layout & utilities
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.page {
+  padding-top: var(--page-top);
+  padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember-soft);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: var(--glow-sm);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  color: var(--text-soft);
+  max-width: 58ch;
+}
+
+.muted { color: var(--text-muted); }
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glass panel — base for cards, dialogs and sections */
+.panel {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-deep);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* Cursor spotlight (see shared/directives/spotlight.directive.ts).
+   The directive only writes --mx / --my; the look lives here. */
+.spotlight {
+  isolation: isolate;
+}
+
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spot-o, 0);
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--ember-rgb), 0.16),
+    transparent 60%
+  );
+  transition: opacity 300ms ease;
+}
+
+.spotlight::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  opacity: var(--spot-o, 0);
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--ember-rgb), 0.75),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: opacity 300ms ease;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(100deg, var(--surface-2) 30%, var(--surface-3) 50%, var(--surface-2) 70%);
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-pill);
+  background: var(--heading);
+  color: var(--bg);
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 200ms var(--ease-out);
+}
+
+.skip-link:focus { transform: none; color: var(--bg); }
+
+/* Particle burst layer (created by ParticleBurstService) */
+.particle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-particles);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.particle--label {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(var(--ember-rgb), 0.45);
+  border-radius: var(--radius-pill);
+  background: rgba(6, 7, 9, 0.78);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 12px rgba(var(--ember-rgb), 0.8);
+  box-shadow: var(--glow-sm);
+}
+
+/* Small status pill: <span class="badge">Team</span> */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 26px;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.badge--ember {
+  border-color: rgba(var(--ember-rgb), 0.4);
+  background: rgba(var(--ember-rgb), 0.1);
+  color: var(--ember-soft);
+}
+
+.badge sh-icon { width: 14px; height: 14px; }
+
+/* Native <dialog> base (create habit, confirmations) */
+.dialog {
+  width: min(560px, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-panel);
+  background: var(--surface-solid);
+  color: var(--text);
+  box-shadow: var(--shadow-deep), 0 0 80px -30px rgba(var(--ember-rgb), 0.45);
+  overflow: auto;
+}
+
+.dialog::backdrop {
+  background: rgba(3, 4, 6, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.dialog[open] { animation: dialog-in 360ms var(--ease-out); }
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+}
+
+@media (max-width: 599px) {
+  /* Bottom sheet on phones */
+  .dialog {
+    width: 100vw;
+    max-width: 100vw;
+    margin: auto 0 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+.alert {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 83, 100, 0.35);
+  border-radius: var(--radius-input);
+  background: rgba(255, 83, 100, 0.08);
+  color: var(--danger);
+  font-size: var(--fs-sm);
+}
+
+.alert--info {
+  border-color: rgba(var(--ember-rgb), 0.35);
+  background: rgba(var(--ember-rgb), 0.08);
+  color: var(--ember-soft);
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-input);
+  background: var(--bg-elev);
+  color: var(--heading);
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.select {
+  appearance: none;
+  padding-right: 2.6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7A1A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 18px;
+}
+
+.select option { background: var(--surface-solid); color: var(--heading); }
+
+.input::placeholder,
+.textarea::placeholder { color: var(--text-muted); }
+
+.input:hover,
+.select:hover,
+.textarea:hover { border-color: rgba(var(--ink-rgb), 0.28); }
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--ember);
+  box-shadow: 0 0 0 3px rgba(var(--ember-rgb), 0.2), var(--glow-sm);
+}
+
+.input[aria-invalid='true'],
+.select[aria-invalid='true'],
+.textarea[aria-invalid='true'] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(255, 83, 100, 0.15);
+}
+
+/* Toggle switch: <label class="switch"><input type="checkbox" role="switch"> …</label> */
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.switch input {
+  appearance: none;
+  flex-shrink: 0;
+  position: relative;
+  width: 48px;
+  height: 28px;
+  margin: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-3);
+  cursor: pointer;
+  transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.switch input::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text-soft);
+  transition: transform 260ms var(--ease-back), background-color 220ms ease;
+}
+
+.switch input:checked {
+  background: rgba(var(--ember-rgb), 0.25);
+  border-color: var(--ember);
+  box-shadow: var(--glow-sm);
+}
+
+.switch input:checked::after {
+  transform: translateX(20px);
+  background: var(--ember);
+}
+
+.segmented {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--bg-elev);
+}
+
+.segmented button {
+  min-height: 42px;
+  padding: 0.45rem 0.9rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-soft);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  transition: background-color 220ms var(--ease-out), color 220ms ease, box-shadow 220ms ease;
+}
+
+.segmented button:hover { color: var(--heading); }
+
+.segmented button[aria-pressed='true'] {
+  background: var(--ember-strong);
+  color: #fff;
+  box-shadow: var(--glow-sm);
+}

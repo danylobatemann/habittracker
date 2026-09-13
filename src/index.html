@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SyncHabit — Build habits together</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description"
+        content="SyncHabit is a social habit tracker: shared habits with friends, live leaderboards, streaks and anti-cheat cooldowns.">
+  <meta name="theme-color" content="#060709">
+  <meta name="color-scheme" content="dark light">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SyncHabit">
+  <meta property="og:description" content="Climb your habits together. Shared streaks, live progress, no cheating.">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Apply the saved theme before first paint to avoid a flash -->
+  <script>
+    try {
+      var t = localStorage.getItem('synchabit.theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <sh-root></sh-root>
+  <noscript>SyncHabit needs JavaScript enabled.</noscript>
+</body>
+</html>
