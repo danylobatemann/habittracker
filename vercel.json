@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/synchabit/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

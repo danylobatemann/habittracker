@@ -6,10 +6,12 @@ import {
   computed,
   effect,
   inject,
+  input,
   signal,
   untracked,
   viewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { fadeSlide, listStagger } from '../../core/animations/route-animations';
 import { prefersReducedMotion, useGsap } from '../../core/animations/gsap';
@@ -20,6 +22,7 @@ import { IconComponent } from '../../shared/components/icon/icon';
 import { ProgressRingComponent } from '../../shared/components/progress-ring/progress-ring';
 import { SummitArtComponent } from '../../shared/components/summit-art/summit-art';
 import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
+import { PHONE_QUERY, injectMediaQuery } from '../../shared/utils/media-query';
 import { CreateHabitDialogComponent } from '../habits/create-habit/create-habit-dialog';
 import { HabitsStore } from '../habits/data/habits.store';
 import { HabitCardComponent } from '../habits/habit-card/habit-card';
@@ -61,8 +64,8 @@ import { HabitCardComponent } from '../habits/habit-card/habit-card';
             <sh-progress-ring
               class="stats__ring"
               [value]="stats().percent / 100"
-              [size]="132"
-              [stroke]="10"
+              [size]="phone() ? 100 : 132"
+              [stroke]="phone() ? 8 : 10"
               [label]="stats().done + ' of ' + stats().total + ' habits done'"
             >
               <span class="ring-center">
@@ -263,6 +266,29 @@ import { HabitCardComponent } from '../habits/habit-card/habit-card';
     .state > sh-icon { width: 42px; height: 42px; color: var(--ember); filter: drop-shadow(0 0 12px rgba(var(--ember-rgb), 0.6)); }
     .state h3 { margin: 0.4rem 0 0; font-size: var(--fs-h3); }
     .state p { margin: 0 0 0.6rem; max-width: 42ch; }
+
+    @media (max-width: 599px) {
+      .page { gap: 1.1rem; }
+      .hero { min-height: 0; }
+      .hero__art { opacity: 0.4; }
+      .hero__content {
+        gap: 1.1rem;
+        background: linear-gradient(180deg, rgba(7, 8, 12, 0.35), rgba(7, 8, 12, 0.8));
+      }
+      :host-context([data-theme='light']) .hero__content {
+        background: linear-gradient(180deg, rgba(243, 241, 237, 0.4), rgba(243, 241, 237, 0.88));
+      }
+      h1 { font-size: 1.55rem; max-width: none; }
+      .level { margin-top: 0.75rem; gap: 0.55rem; }
+      .stats { flex-wrap: nowrap; gap: 1rem; }
+      .ring-center strong { font-size: 1.35rem; }
+      .ring-center small { font-size: 0.62rem; }
+      .stats__list { flex: 1; min-width: 0; gap: 0.35rem; }
+      .stats__list div { min-width: 0; gap: 0.75rem; }
+      dt { font-size: var(--fs-xs); white-space: nowrap; }
+      .toolbar h2 { font-size: 1.2rem; }
+      .toolbar .sh-btn { --btn-h: 42px; --btn-px: 1rem; font-size: 0.9rem; }
+    }
   `,
 })
 export class DashboardPage {
@@ -271,6 +297,13 @@ export class DashboardPage {
   protected readonly clock = inject(ServerClock);
 
   private readonly grid = viewChild<ElementRef<HTMLElement>>('grid');
+  private readonly dialog = viewChild(CreateHabitDialogComponent);
+  private readonly router = inject(Router);
+
+  /** `?create=1` (tab bar "New") opens the create dialog */
+  readonly create = input<string>();
+
+  protected readonly phone = injectMediaQuery(PHONE_QUERY);
 
   protected readonly skeletons = [0, 1, 2];
   protected readonly stats = this.store.stats;
@@ -312,6 +345,16 @@ export class DashboardPage {
   constructor() {
     this.store.load();
     inject(DestroyRef).onDestroy(this.store.enableLiveUpdates());
+
+    effect(() => {
+      if (!this.create()) return;
+      const dialog = this.dialog();
+      if (!dialog) return;
+      untracked(() => {
+        dialog.open();
+        void this.router.navigate([], { queryParams: { create: null }, queryParamsHandling: 'merge', replaceUrl: true });
+      });
+    });
 
     // First paint of the list → GSAP stagger (later additions use @listStagger)
     effect(() => {

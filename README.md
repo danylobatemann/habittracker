@@ -42,9 +42,13 @@ src/app/
 ```bash
 npm install
 npm start          # http://localhost:4200 — dev, с mock-бэкендом
-npm run build:demo # статическая сборка с mock-бэкендом (GitHub Pages / Netlify)
-npm run build      # продакшен-сборка для реального бэкенда (mock вырезан из бандла)
+npm run build      # статическая сборка с mock-бэкендом — регистрация/вход работают прямо в браузере
+npm run build:api  # продакшен-сборка для реального бэкенда (mock вырезан из бандла)
 ```
+
+Результат сборки — `dist/synchabit/browser`. Для SPA-роутинга уже есть `vercel.json` (Vercel) и `public/_redirects` (Netlify): любые пути отдают `index.html`.
+
+> ⚠️ Сборка `build:api` без запущенного API на `/api/v1` не сможет ни зарегистрировать, ни залогинить пользователя.
 
 ### Демо-режим (mock-бэкенд)
 

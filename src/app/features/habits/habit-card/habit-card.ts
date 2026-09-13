@@ -23,6 +23,7 @@ import { ProgressRingComponent } from '../../../shared/components/progress-ring/
 import { SpotlightDirective } from '../../../shared/directives/spotlight.directive';
 import { RelativeTimePipe } from '../../../shared/pipes/relative-time.pipe';
 import { ParticleBurstService } from '../../../shared/services/particle-burst.service';
+import { PHONE_QUERY, injectMediaQuery } from '../../../shared/utils/media-query';
 import { formatDuration } from '../../../shared/utils/time-format';
 import { injectCooldown } from '../data/cooldown';
 import { HabitsStore } from '../data/habits.store';
@@ -95,8 +96,8 @@ const FRIEND_PULSE_MS = 3200;
           #ring
           [value]="progressValue()"
           [cooldown]="cooldown.fraction()"
-          [size]="116"
-          [stroke]="8"
+          [size]="phone() ? 92 : 116"
+          [stroke]="phone() ? 7 : 8"
           [label]="ringLabel()"
         >
           @switch (cooldown.phase()) {
@@ -288,10 +289,33 @@ const FRIEND_PULSE_MS = 3200;
     .room-link sh-icon { width: 15px; height: 15px; transition: transform 200ms var(--ease-out); }
     .room-link:hover { color: var(--ember-soft); }
     .room-link:hover sh-icon { transform: translateX(3px); }
+
+    /* Touch screens have no hover to reveal the delete button */
+    @media (hover: none) {
+      .delete { opacity: 1; }
+    }
+
+    @media (max-width: 599px) {
+      .card { gap: 0.85rem; padding: 0.95rem; }
+      .head { gap: 0.7rem; }
+      .tile { width: 40px; height: 40px; border-radius: 12px; }
+      .tile sh-icon { width: 20px; height: 20px; }
+      h3 { font-size: 1rem; }
+      .body { gap: 0.9rem; }
+      .center strong { font-size: 1.3rem; }
+      .center .of { font-size: 0.85rem; }
+      .center small { font-size: 0.6rem; }
+      :host([data-phase='cooldown']) .center strong { font-size: 1.05rem; }
+      .center--done sh-icon { width: 26px; height: 26px; }
+      .foot { gap: 0.35rem; }
+      .room-link { min-height: 40px; }
+    }
   `,
 })
 export class HabitCardComponent {
   readonly habit = input.required<Habit>();
+
+  protected readonly phone = injectMediaQuery(PHONE_QUERY);
 
   private readonly store = inject(HabitsStore);
   private readonly particles = inject(ParticleBurstService);

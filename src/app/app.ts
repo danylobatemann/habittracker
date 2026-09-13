@@ -10,10 +10,11 @@ import { ClockSync } from './core/time/clock-sync.service';
 import { CursorGlowComponent } from './layout/cursor-glow/cursor-glow';
 import { FloatingDockComponent } from './layout/floating-dock/floating-dock';
 import { KineticGridComponent } from './layout/kinetic-grid/kinetic-grid';
+import { TabBarComponent } from './layout/tab-bar/tab-bar';
 import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
 
 /**
- * Shell: kinetic grid (background) → cursor glow → dock → routed page → toasts.
+ * Shell: kinetic grid (background) → cursor glow → dock → routed page → tab bar (phones) → toasts.
  *
  * `routeKey` is the path without query/fragment and drives @routeTransition,
  * so changing only query params (e.g. ?returnUrl) doesn't replay the animation.
@@ -21,7 +22,7 @@ import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
 @Component({
   selector: 'sh-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, KineticGridComponent, CursorGlowComponent, FloatingDockComponent, ToastOutletComponent],
+  imports: [RouterOutlet, KineticGridComponent, CursorGlowComponent, FloatingDockComponent, TabBarComponent, ToastOutletComponent],
   animations: [routeTransition],
   template: `
     <a class="skip-link" href="#content" (click)="skipToContent($event)">Skip to content</a>
@@ -34,6 +35,7 @@ import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
       <router-outlet />
     </main>
 
+    <sh-tab-bar />
     <sh-toast-outlet />
   `,
   styles: `

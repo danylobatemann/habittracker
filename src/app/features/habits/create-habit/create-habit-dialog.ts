@@ -270,6 +270,21 @@ const PRESETS: Preset[] = [
     .switch small { font-size: var(--fs-xs); }
 
     .actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 0.6rem; }
+
+    /* Bottom sheet on phones: the buttons stay in reach while the form scrolls */
+    @media (max-width: 599px) {
+      .actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 1;
+        flex-wrap: nowrap;
+        margin: 0 -1.25rem -1.25rem;
+        padding: 0.75rem 1.25rem 1rem;
+        border-top: 1px solid var(--line);
+        background: var(--surface-solid);
+      }
+      .actions .sh-btn { flex: 1; }
+    }
   `,
 })
 export class CreateHabitDialogComponent {

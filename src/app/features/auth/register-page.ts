@@ -13,6 +13,10 @@ import { IconComponent } from '../../shared/components/icon/icon';
 import { applyServerErrors, controlError } from '../../shared/utils/form-errors';
 import { AuthShellComponent } from './auth-shell';
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+const PASSWORD_RULE = 'Use at least 8 characters with a letter and a number.';
+
 @Component({
   selector: 'sh-register-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +59,7 @@ import { AuthShellComponent } from './auth-shell';
           />
         </sh-form-field>
 
-        <sh-form-field label="Password" forId="reg-password" hint="At least 8 characters." [error]="errors().password">
+        <sh-form-field label="Password" forId="reg-password" hint="At least 8 characters, with a letter and a number." [error]="errors().password">
           <input
             id="reg-password"
             class="input"
@@ -68,7 +72,10 @@ import { AuthShellComponent } from './auth-shell';
           <span ffAside class="strength mono" [attr.data-level]="strength()">{{ strengthLabel() }}</span>
         </sh-form-field>
 
-        <p class="tz muted"><sh-icon name="clock" /> Your day resets at midnight in <strong>{{ timezone }}</strong>.</p>
+        <p class="tz muted">
+          <sh-icon name="clock" />
+          <span>Your day resets at midnight in <strong>{{ timezone }}</strong>.</span>
+        </p>
 
         <button shButton type="submit" size="lg" block [busy]="busy()" [disabled]="busy()">
           Create account <sh-icon name="arrow-right" />
@@ -98,10 +105,14 @@ import { AuthShellComponent } from './auth-shell';
     .tz {
       display: flex;
       gap: 0.5rem;
-      align-items: center;
+      align-items: flex-start;
       margin: 0;
       font-size: var(--fs-sm);
+      line-height: 1.45;
     }
+
+    .tz sh-icon { flex-shrink: 0; width: 16px; height: 16px; margin-top: 0.12em; }
+    .tz strong { overflow-wrap: anywhere; }
 
     .tz strong { color: var(--text); font-weight: 600; }
 
@@ -122,8 +133,9 @@ export class RegisterPage {
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    // Mirrors the server rules (auth/register): 8+ chars with a letter and a digit
+    email: ['', [Validators.required, Validators.pattern(EMAIL_PATTERN)]],
+    password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(PASSWORD_PATTERN)]],
   });
 
   protected readonly errors = computed(() => {
@@ -132,8 +144,11 @@ export class RegisterPage {
     const c = this.form.controls;
     return {
       displayName: controlError(c.displayName, s, 'Display name'),
-      email: controlError(c.email, s, 'Email'),
-      password: controlError(c.password, s, 'Password'),
+      email: c.email.hasError('pattern') && (c.email.touched || s) ? 'Enter a valid email address.' : controlError(c.email, s, 'Email'),
+      password:
+        (c.password.hasError('minlength') || c.password.hasError('pattern')) && (c.password.touched || s)
+          ? PASSWORD_RULE
+          : controlError(c.password, s, 'Password'),
     };
   });
 

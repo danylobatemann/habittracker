@@ -217,9 +217,11 @@ h2 sh-icon { width: 20px; height: 20px; color: var(--ember); }
   margin: 0;
   padding: 0;
   list-style: none;
-  max-height: min(70vh, 640px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+}
+
+/* Side column on desktop scrolls on its own; stacked on smaller screens it just flows */
+@media (min-width: 1000px) {
+  .feed__list { max-height: min(70vh, 640px); overflow-y: auto; overscroll-behavior: contain; }
 }
 .event {
   display: flex;
@@ -254,6 +256,32 @@ h2 sh-icon { width: 20px; height: 20px; color: var(--ember); }
 .skel__row { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
 .skel__row .av { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
 .skel__row .line { flex: 1; height: 14px; }
+
+/* ---- phones ---- */
+@media (max-width: 599px) {
+  .page { gap: 1rem; }
+  .back { min-height: 40px; }
+
+  .head { grid-template-columns: auto minmax(0, 1fr); gap: 0.9rem 0.8rem; padding: 1rem; }
+  .tile { width: 46px; height: 46px; border-radius: 15px; }
+  .tile sh-icon { width: 24px; height: 24px; }
+  .head h1 { margin-top: 0.25rem; font-size: 1.5rem; }
+  .conn { margin-left: 0.4rem; }
+  .presence { margin-top: 0.65rem; }
+  .head__actions { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
+  .head__actions .sh-btn { --btn-h: 44px; --btn-px: 0.8rem; font-size: 0.9rem; }
+
+  .me { gap: 1rem; padding: 1.1rem; }
+  .me__side { flex-basis: 100%; }
+  .ring-center strong { font-size: 1.8rem; }
+  .ring-center strong.ice { font-size: 1.3rem; }
+  .ring-center .of { font-size: 0.95rem; }
+  .streak { justify-content: center; }
+  .me__side > .small { text-align: center; }
+
+  .team, .board, .feed { padding: 1rem; }
+  .row { gap: 0.6rem; padding: 0.55rem 0.6rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .row.is-flash, .conn__dot { animation: none !important; }

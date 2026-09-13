@@ -25,6 +25,7 @@ import { ProgressRingComponent } from '../../shared/components/progress-ring/pro
 import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 import { RelativeTimePipe } from '../../shared/pipes/relative-time.pipe';
 import { ParticleBurstService } from '../../shared/services/particle-burst.service';
+import { PHONE_QUERY, injectMediaQuery } from '../../shared/utils/media-query';
 import { formatDuration } from '../../shared/utils/time-format';
 import { injectCooldown } from '../habits/data/cooldown';
 import { HabitsStore } from '../habits/data/habits.store';
@@ -143,8 +144,8 @@ const EMPTY_HABIT: Habit = {
                     #ring
                     [value]="h.progress.count / h.progress.target"
                     [cooldown]="cooldown.fraction()"
-                    [size]="168"
-                    [stroke]="11"
+                    [size]="phone() ? 132 : 168"
+                    [stroke]="phone() ? 9 : 11"
                     [label]="h.progress.count + ' of ' + h.progress.target"
                   >
                     <span class="ring-center">
@@ -290,6 +291,7 @@ export class RoomPage {
   readonly habitId = input.required<string>();
 
   protected readonly room = inject(RoomStore);
+  protected readonly phone = injectMediaQuery(PHONE_QUERY);
   private readonly habits = inject(HabitsStore);
   private readonly router = inject(Router);
   private readonly particles = inject(ParticleBurstService);

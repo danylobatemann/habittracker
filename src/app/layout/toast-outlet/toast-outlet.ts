@@ -11,7 +11,7 @@ const ICONS: Record<Toast['kind'], IconName> = {
   xp: 'bolt',
 };
 
-/** Renders ToastService.toasts(): bottom-centre on phones, bottom-right on desktop */
+/** Renders ToastService.toasts(): bottom-centre above the tab bar on phones, bottom-right on desktop */
 @Component({
   selector: 'sh-toast-outlet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +40,7 @@ const ICONS: Record<Toast['kind'], IconName> = {
       right: 0;
       bottom: 0;
       z-index: var(--z-toast);
-      padding: 0 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+      padding: 0 0.75rem max(0.75rem, env(safe-area-inset-bottom), var(--tab-bar-h));
       pointer-events: none;
     }
 
