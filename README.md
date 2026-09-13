@@ -42,17 +42,17 @@ src/app/
 ```bash
 npm install
 npm start          # http://localhost:4200 — dev, с mock-бэкендом
-npm run build      # статическая сборка с mock-бэкендом — регистрация/вход работают прямо в браузере
-npm run build:api  # продакшен-сборка для реального бэкенда (mock вырезан из бандла)
+npm run build      # продакшен-сборка с mock-бэкендом — регистрация/вход работают прямо в браузере
+npm run build:api  # сборка для реального бэкенда (mock вырезан из бандла)
 ```
 
-Результат сборки — `dist/synchabit/browser`. Для SPA-роутинга уже есть `vercel.json` (Vercel) и `public/_redirects` (Netlify): любые пути отдают `index.html`.
+Любая сборка по умолчанию (`ng build`, `npm run build`, `--configuration production`) включает mock-бэкенд, поэтому сайт работает на любом статическом хостинге без сервера. Результат — `dist/synchabit/browser`. Для SPA-роутинга уже есть `vercel.json` (Vercel) и `public/_redirects` (Netlify): любые пути отдают `index.html`.
 
 > ⚠️ Сборка `build:api` без запущенного API на `/api/v1` не сможет ни зарегистрировать, ни залогинить пользователя.
 
 ### Демо-режим (mock-бэкенд)
 
-В dev и demo-сборках все REST- и WebSocket-вызовы обслуживает эмулятор в браузере (`core/mock`) — с задержками, валидацией, кулдаунами и «друзьями», которые сами отмечаются. Данные хранятся в `localStorage`.
+В dev и продакшен-сборках все REST- и WebSocket-вызовы обслуживает эмулятор в браузере (`core/mock`) — с задержками, валидацией, кулдаунами и «друзьями», которые сами отмечаются. Данные хранятся в `localStorage`.
 
 - Демо-аккаунт: **demo@synchabit.app** / **summit2026** (кнопка «Use demo account» на странице входа)
 - Демо-инвайт: `/invite/ember-peak`
@@ -62,7 +62,7 @@ npm run build:api  # продакшен-сборка для реального �
 
 ### Реальный бэкенд
 
-`src/environments/environment.ts`:
+`src/environments/environment.api.ts` (используется `npm run build:api`):
 
 ```ts
 apiUrl: '/api/v1',   // базовый REST URL
@@ -71,7 +71,7 @@ useMockApi: false,
 appUrl: '',          // origin для инвайт-ссылок, пусто = location.origin
 ```
 
-В продакшен-конфигурации `angular.json` подменяет `mock.providers.ts` на пустой `mock.providers.off.ts`, так что код эмулятора не попадает в бандл.
+В конфигурации `api` файл `angular.json` подменяет `mock.providers.ts` на пустой `mock.providers.off.ts`, так что код эмулятора не попадает в бандл.
 
 ## Контракт API
 

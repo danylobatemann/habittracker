@@ -45,15 +45,9 @@
                   "maximumError": "32kB"
                 }
               ],
-              "outputHashing": "all",
-              "fileReplacements": [
-                {
-                  "replace": "src/app/core/mock/mock.providers.ts",
-                  "with": "src/app/core/mock/mock.providers.off.ts"
-                }
-              ]
+              "outputHashing": "all"
             },
-            "demo": {
+            "api": {
               "budgets": [
                 {
                   "type": "initial",
@@ -70,7 +64,11 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.demo.ts"
+                  "with": "src/environments/environment.api.ts"
+                },
+                {
+                  "replace": "src/app/core/mock/mock.providers.ts",
+                  "with": "src/app/core/mock/mock.providers.off.ts"
                 }
               ]
             },
@@ -94,8 +92,8 @@
             "production": {
               "buildTarget": "synchabit:build:production"
             },
-            "demo": {
-              "buildTarget": "synchabit:build:demo"
+            "api": {
+              "buildTarget": "synchabit:build:api"
             },
             "development": {
               "buildTarget": "synchabit:build:development"

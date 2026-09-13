@@ -84,5 +84,7 @@ function fallbackMessage(status: number): string {
   if (status === 404) return 'We couldn’t find what you were looking for.';
   if (status === 403) return 'You don’t have access to this.';
   if (status === 429) return 'Slow down a little — too many requests.';
+  // Typical answer of a static host to POST /api/… — the bundle was built without a backend
+  if (status === 405) return 'The SyncHabit API isn’t available on this server.';
   return 'Something went wrong.';
 }

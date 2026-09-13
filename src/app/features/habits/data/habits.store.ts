@@ -212,7 +212,7 @@ export class HabitsStore {
     this.replace(id, optimistic);
     this.setPending(id, true);
 
-    const key = crypto.randomUUID();
+    const key = idempotencyKey();
     try {
       const response = await firstValueFrom(
         this.api.checkIn(id, key).pipe(
@@ -420,4 +420,11 @@ export function applyOptimisticCheckIn(habit: Habit, nowMs: number): Habit {
           }
         : habit.streak,
   };
+}
+
+/** `crypto.randomUUID` only exists on https/localhost — not when a phone opens the dev server by LAN IP */
+function idempotencyKey(): string {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const hex = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
