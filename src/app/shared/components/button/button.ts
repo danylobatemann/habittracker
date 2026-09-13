@@ -6,8 +6,9 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 /**
  * Button with the "spinning border" look (port of SpinningBorderButton):
  * a conic gradient rotates behind a dark pill, leaving a 1.5 px neon rim.
- * The angle is an animatable registered custom property (`@property --sh-angle`),
- * so it's pure CSS — no JS, no extra DOM per frame.
+ * The gradient is painted once on an oversized square that spins with
+ * `rotate` inside a clipped rim — a compositor-only animation. (Animating the
+ * gradient angle itself repainted every button, plus a blurred copy, 60×/s.)
  *
  *   <button shButton (click)="save()">Save</button>
  *   <a shButton variant="ghost" routerLink="/login">Sign in</a>
@@ -32,6 +33,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
     '[attr.aria-busy]': 'busy() || null',
   },
   template: `
+    <span class="sh-btn__rim" aria-hidden="true"></span>
     <span class="sh-btn__inner">
       @if (busy()) {
         <span class="sh-btn__spinner" aria-hidden="true"></span>
@@ -40,12 +42,6 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
     </span>
   `,
   styles: `
-    @property --sh-angle {
-      syntax: '<angle>';
-      initial-value: 0deg;
-      inherits: false;
-    }
-
     .sh-btn {
       --btn-h: 50px;
       --btn-px: 1.4rem;
@@ -94,16 +90,28 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 
     .sh-btn sh-icon { width: 1.2em; height: 1.2em; }
 
-    /* --- spin: rotating conic rim + blurred glow copy ------------------------ */
-    .sh-btn--spin::before,
-    .sh-btn--spin::after {
-      content: '';
+    /* --- spin: rotating conic rim + soft static glow -------------------------- */
+    .sh-btn__rim { display: none; }
+
+    .sh-btn--spin .sh-btn__rim {
       position: absolute;
       inset: 0;
       z-index: -1;
+      display: block;
+      overflow: hidden;
       border-radius: inherit;
+    }
+
+    /* Square wider than the button's diagonal, so the rim is always covered while it turns */
+    .sh-btn--spin .sh-btn__rim::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 150%;
+      aspect-ratio: 1;
+      translate: -50% -50%;
       background: conic-gradient(
-        from var(--sh-angle),
         transparent 0deg,
         rgba(var(--ember-rgb), 0.15) 70deg,
         var(--ember) 140deg,
@@ -117,8 +125,12 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
     }
 
     .sh-btn--spin::after {
+      content: '';
+      position: absolute;
       inset: 4px;
-      filter: blur(14px);
+      z-index: -2;
+      border-radius: inherit;
+      box-shadow: 0 0 22px 2px rgba(var(--ember-rgb), 0.55);
       opacity: 0.45;
       transition: opacity 250ms ease;
     }
@@ -133,12 +145,11 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
       box-shadow: inset 0 1px 0 rgba(var(--ink-rgb), 0.06);
     }
 
-    .sh-btn--spin:hover::before,
-    .sh-btn--spin:focus-visible::before { animation-duration: 1.6s; }
-    .sh-btn--spin:hover::after { opacity: 0.8; }
+    .sh-btn--spin:hover::after,
+    .sh-btn--spin:focus-visible::after { opacity: 0.8; }
 
     @keyframes sh-btn-spin {
-      to { --sh-angle: 360deg; }
+      to { rotate: 360deg; }
     }
 
     /* --- solid ------------------------------------------------------------------- */
@@ -186,8 +197,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
       opacity: 0.5;
     }
 
-    .sh-btn:disabled::before,
-    .sh-btn:disabled::after { animation-play-state: paused; }
+    .sh-btn:disabled .sh-btn__rim::before { animation-play-state: paused; }
 
     .sh-btn.is-busy { cursor: progress; opacity: 1; }
 
@@ -205,8 +215,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .sh-btn--spin::before,
-      .sh-btn--spin::after { animation: none; --sh-angle: 120deg; }
+      .sh-btn--spin .sh-btn__rim::before { animation: none; rotate: 120deg; }
     }
   `,
 })

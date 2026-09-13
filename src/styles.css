@@ -10,7 +10,7 @@
   /* --- Palette (dark, default) ------------------------------------------ */
   --bg: #060709;
   --bg-elev: #0b0c0f;
-  --surface: rgba(17, 18, 22, 0.72);
+  --surface: rgba(17, 18, 22, 0.86);
   --surface-solid: #111216;
   --surface-2: #17181d;
   --surface-3: #202229;
@@ -88,7 +88,7 @@
 :root[data-theme='light'] {
   --bg: #f3f1ed;
   --bg-elev: #ebe8e3;
-  --surface: rgba(255, 255, 255, 0.78);
+  --surface: rgba(255, 255, 255, 0.9);
   --surface-solid: #ffffff;
   --surface-2: #f0ede8;
   --surface-3: #e4e0d9;
@@ -310,15 +310,15 @@ label {
   font-variant-numeric: tabular-nums;
 }
 
-/* Glass panel — base for cards, dialogs and sections */
+/* Glass panel — base for cards, dialogs and sections.
+   No backdrop-filter: the grid behind is animated, so every panel would be
+   re-blurred on every frame — a dense surface color looks the same and is free. */
 .panel {
   position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-panel);
   box-shadow: var(--shadow-deep);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  backdrop-filter: blur(14px) saturate(1.2);
 }
 
 /* Cursor spotlight (see shared/directives/spotlight.directive.ts).

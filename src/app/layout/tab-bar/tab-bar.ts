@@ -62,9 +62,8 @@ import { IconComponent } from '../../shared/components/icon/icon';
       padding: 0 0.3rem;
       border: 1px solid var(--line-strong);
       border-radius: 22px;
-      background: color-mix(in srgb, var(--surface-solid) 86%, transparent);
-      -webkit-backdrop-filter: blur(16px) saturate(1.3);
-      backdrop-filter: blur(16px) saturate(1.3);
+      /* Opaque instead of backdrop-filter: blurring the page under a fixed bar on every scroll frame is what makes phones stutter */
+      background: color-mix(in srgb, var(--surface-solid) 97%, transparent);
       box-shadow: var(--shadow-deep);
     }
 

@@ -160,8 +160,8 @@ const SPRING = 0.22;
       border: 1px solid var(--line);
       border-radius: var(--radius-pill);
       background: color-mix(in srgb, var(--bg) 62%, transparent);
-      -webkit-backdrop-filter: blur(18px) saturate(1.3);
-      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       transition: border-color 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
     }
 

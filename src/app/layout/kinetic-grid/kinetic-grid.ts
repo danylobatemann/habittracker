@@ -51,7 +51,7 @@ const OFFSCREEN = -9999;
  * so it follows the theme.
  *
  * Differences from the original, for production:
- *   • DPR-aware canvas (sharp on retina, capped at 2×);
+ *   • DPR-aware canvas (capped at 1.5×), work buffers reused between frames;
  *   • the rAF loop sleeps when nothing moves (no idle CPU/battery drain);
  *   • inactive segments are batched into a single path — ~1 stroke per frame
  *     instead of ~1400;
@@ -106,6 +106,12 @@ export class KineticGridComponent {
   private readonly mouse: Point = { x: OFFSCREEN, y: OFFSCREEN };
   private readonly target: Point = { x: OFFSCREEN, y: OFFSCREEN };
   private readonly ripples: Ripple[] = [];
+
+  /** Per-frame work buffers, reused — no garbage while the cursor moves */
+  private xs = new Float32Array(0);
+  private ys = new Float32Array(0);
+  private pr = new Float32Array(0);
+  private readonly active: number[] = [];
 
   private accent: Rgb = { r: 255, g: 122, b: 26 };
   private ink: Rgb = { r: 255, g: 255, b: 255 };
@@ -246,9 +252,9 @@ export class KineticGridComponent {
     const cellW = W / (cols - 1);
     const cellH = H / (rows - 1);
 
-    const xs = new Float32Array(cols * rows);
-    const ys = new Float32Array(cols * rows);
-    const pr = new Float32Array(cols * rows);
+    const { xs, ys, pr } = this.buffers(cols * rows);
+    const active = this.active;
+    active.length = 0;
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
@@ -264,7 +270,6 @@ export class KineticGridComponent {
     // Pass 1: every calm segment in one path
     ctx.beginPath();
     ctx.lineCap = 'butt';
-    const active: number[] = [];
     const segment = (a: number, b: number) => {
       if (pr[a] > 0.001 || pr[b] > 0.001) {
         active.push(a, b);
@@ -300,7 +305,8 @@ export class KineticGridComponent {
 
     // Nodes: calm ones batched, active ones with glow
     ctx.beginPath();
-    for (let i = 0; i < xs.length; i++) {
+    const count = cols * rows;
+    for (let i = 0; i < count; i++) {
       if (pr[i] > 0.001) continue;
       ctx.moveTo(xs[i] + NODE_BASE_RADIUS, ys[i]);
       ctx.arc(xs[i], ys[i], NODE_BASE_RADIUS, 0, Math.PI * 2);
@@ -308,20 +314,17 @@ export class KineticGridComponent {
     ctx.fillStyle = `rgba(${ir},${ig},${ib},${this.inkAlpha * 1.5})`;
     ctx.fill();
 
-    for (let i = 0; i < xs.length; i++) {
+    for (let i = 0; i < count; i++) {
       const p = pr[i];
       if (p <= 0.001) continue;
       const s = p * p * (3 - 2 * p);
       const radius = NODE_BASE_RADIUS + (NODE_ACTIVE_RADIUS - NODE_BASE_RADIUS) * s;
 
       if (s > 0.3) {
-        const glowR = radius + 6 * ((s - 0.3) / 0.7);
-        const grd = ctx.createRadialGradient(xs[i], ys[i], radius * 0.5, xs[i], ys[i], glowR);
-        grd.addColorStop(0, `rgba(${ar},${ag},${ab},${(s * 0.3).toFixed(3)})`);
-        grd.addColorStop(1, `rgba(${ar},${ag},${ab},0)`);
+        // Flat translucent halo — a radial gradient per node per frame was the costliest part of the loop
         ctx.beginPath();
-        ctx.arc(xs[i], ys[i], glowR, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
+        ctx.arc(xs[i], ys[i], radius + 4 * ((s - 0.3) / 0.7), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${ar},${ag},${ab},${(s * 0.14).toFixed(3)})`;
         ctx.fill();
       }
 
@@ -395,11 +398,21 @@ export class KineticGridComponent {
     ys[i] = gy + ry;
   }
 
+  private buffers(size: number): { xs: Float32Array; ys: Float32Array; pr: Float32Array } {
+    if (this.xs.length < size) {
+      this.xs = new Float32Array(size);
+      this.ys = new Float32Array(size);
+      this.pr = new Float32Array(size);
+    }
+    return { xs: this.xs, ys: this.ys, pr: this.pr };
+  }
+
   // --- sizing & colors --------------------------------------------------------------
 
   private resize(): void {
     const canvas = this.canvasRef().nativeElement;
-    this.dpr = Math.min(2, window.devicePixelRatio || 1);
+    // Thin faint lines under a vignette: 1.5× is visually the same as 2× and ~45% fewer pixels
+    this.dpr = Math.min(1.5, window.devicePixelRatio || 1);
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     canvas.width = Math.round(this.width * this.dpr);

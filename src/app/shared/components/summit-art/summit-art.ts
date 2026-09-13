@@ -56,8 +56,7 @@ const FALLBACK = 'images/mountain.svg';
       aspect-ratio: 1;
       translate: -50% -50%;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(var(--ember-rgb), 0.28), transparent 62%);
-      mix-blend-mode: screen;
+      background: radial-gradient(circle, rgba(var(--ember-rgb), 0.22), transparent 62%);
       animation: peak-breathe 6s ease-in-out infinite;
       pointer-events: none;
     }

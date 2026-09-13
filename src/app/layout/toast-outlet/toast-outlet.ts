@@ -62,9 +62,7 @@ const ICONS: Record<Toast['kind'], IconName> = {
       padding: 0.6rem 0.5rem 0.6rem 0.7rem;
       border: 1px solid var(--line-strong);
       border-radius: 18px;
-      background: color-mix(in srgb, var(--surface-solid) 92%, transparent);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--surface-solid) 97%, transparent);
       box-shadow: var(--shadow-deep);
       color: var(--text);
     }

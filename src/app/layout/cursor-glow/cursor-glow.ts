@@ -19,6 +19,8 @@ const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, label,
  *
  * Mouse only — on touch devices and with reduced motion nothing is rendered and
  * no listeners are attached. Inertia comes from gsap.quickTo.
+ * No blend modes or blur filters: the radial gradients are already soft, and
+ * those would force the whole page under the glow to be recomposited per frame.
  */
 @Component({
   selector: 'sh-cursor-glow',
@@ -53,11 +55,8 @@ const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, label,
       width: 0;
       height: 0;
       opacity: 0;
-      mix-blend-mode: screen;
       will-change: transform;
     }
-
-    :host-context([data-theme='light']) .glow { mix-blend-mode: multiply; }
 
     .glow__halo,
     .glow__core {
@@ -79,7 +78,6 @@ const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, label,
         rgba(var(--ember-rgb), 0.04) 58%,
         transparent 72%
       );
-      filter: blur(24px);
     }
 
     .glow__core {
@@ -92,7 +90,6 @@ const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, label,
         rgba(var(--gold-rgb), 0.12) 45%,
         transparent 70%
       );
-      filter: blur(10px);
     }
   `,
 })

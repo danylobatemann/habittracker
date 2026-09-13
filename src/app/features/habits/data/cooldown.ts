@@ -18,7 +18,8 @@ export interface Cooldown {
   readyTicks: Signal<number>;
 }
 
-const TICK_MS = 250;
+/** The label shows whole seconds and the ring eases over 700 ms, so faster ticks only cost re-renders */
+const TICK_MS = 500;
 
 /**
  * Cooldown state machine for one habit card.
