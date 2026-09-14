@@ -74,7 +74,7 @@
 
   /* --- Layers ------------------------------------------------------------- */
   --z-grid: 0;
-  --z-cursor: 2;
+  --z-cursor: 1000;
   --z-content: 3;
   --z-dock: 50;
   --z-dialog: 70;
@@ -210,6 +210,15 @@ textarea {
 }
 
 button { cursor: pointer; }
+
+/* Smooth cursor (layout/smooth-cursor) replaces the native one on mouse devices.
+   Modal dialogs sit in the top layer above it, so there the native cursor returns. */
+@media (hover: hover) and (pointer: fine) {
+  html.has-smooth-cursor:not(:has(dialog:modal)),
+  html.has-smooth-cursor:not(:has(dialog:modal)) * { cursor: none !important; }
+}
+
+html:has(dialog:modal) sh-smooth-cursor { display: none !important; }
 
 /* No double-tap zoom delay and no grey flash on taps */
 a,
