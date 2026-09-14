@@ -11,7 +11,7 @@
 - **Realtime** — WebSocket с автопереподключением (экспоненциальный backoff с jitter), пинг, повторная подписка на комнаты и сверка состояния при возврате во вкладку. Лидерборд переставляется FLIP-анимацией, лента активности обновляется вживую.
 - **Optimistic UI с откатом** — check-in, создание/удаление привычек, настройки уведомлений применяются мгновенно и откатываются при ошибке.
 - **HTTP-слой** — интерцепторы: JWT, refresh по 401 (одна очередь на все параллельные запросы), глобальная обработка ошибок с тостами.
-- **Дизайн** — глубокая тёмная тема в палитре ночной горы (звёздное небо, снег, оранжевая вершина на закате), плавный курсор-стрелка на пружинах (поворачивается по направлению движения), фон KineticGrid, кнопки SpinningBorder, верхняя панель FloatingDock, skeleton-лоадеры, stagger, переходы между роутами, конфетти.
+- **Дизайн** — глубокая тёмная тема в палитре ночной горы (звёздное небо, снег, оранжевая вершина на закате), курсор-«хвост» из точки и кольца (плавно догоняют мышь, кольцо растёт над ссылками и кнопками), фон KineticGrid, кнопки SpinningBorder, верхняя панель FloatingDock, skeleton-лоадеры, stagger, переходы между роутами, конфетти.
 
 ## Страницы
 
@@ -31,7 +31,7 @@ src/app/
   core/       api, auth (guards, tokens), http (interceptors, ApiError), realtime,
               time (синхронизация серверных часов), models, mock (in-browser backend)
   features/   landing, auth, dashboard, habits (store + компоненты), room, invite, profile, not-found
-  layout/     kinetic-grid, floating-dock, smooth-cursor, tab-bar, toast-outlet
+  layout/     kinetic-grid, floating-dock, cursor-follower, tab-bar, toast-outlet
   shared/     components, directives, pipes, services, utils
 ```
 

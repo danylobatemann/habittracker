@@ -7,14 +7,14 @@ import { refreshScrollTriggers } from './core/animations/gsap';
 import { routeTransition } from './core/animations/route-animations';
 import { ThemeService } from './core/services/theme.service';
 import { ClockSync } from './core/time/clock-sync.service';
+import { CursorFollowerComponent } from './layout/cursor-follower/cursor-follower';
 import { FloatingDockComponent } from './layout/floating-dock/floating-dock';
 import { KineticGridComponent } from './layout/kinetic-grid/kinetic-grid';
-import { SmoothCursorComponent } from './layout/smooth-cursor/smooth-cursor';
 import { TabBarComponent } from './layout/tab-bar/tab-bar';
 import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
 
 /**
- * Shell: kinetic grid (background) → dock → routed page → tab bar (phones) → toasts → smooth cursor (on top).
+ * Shell: kinetic grid (background) → dock → routed page → tab bar (phones) → toasts → cursor follower (on top).
  *
  * `routeKey` is the path without query/fragment and drives @routeTransition,
  * so changing only query params (e.g. ?returnUrl) doesn't replay the animation.
@@ -22,7 +22,7 @@ import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
 @Component({
   selector: 'sh-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, KineticGridComponent, FloatingDockComponent, TabBarComponent, ToastOutletComponent, SmoothCursorComponent],
+  imports: [RouterOutlet, KineticGridComponent, FloatingDockComponent, TabBarComponent, ToastOutletComponent, CursorFollowerComponent],
   animations: [routeTransition],
   template: `
     <a class="skip-link" href="#content" (click)="skipToContent($event)">Skip to content</a>
@@ -36,7 +36,7 @@ import { ToastOutletComponent } from './layout/toast-outlet/toast-outlet';
 
     <sh-tab-bar />
     <sh-toast-outlet />
-    <sh-smooth-cursor />
+    <sh-cursor-follower />
   `,
   styles: `
     :host {
